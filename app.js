@@ -31,7 +31,7 @@ sequelize
   .then(() => {
     console.log('Connection has been established successfully.');
     sequelize
-      .sync({force: true})
+      .sync()
       .then(res => {
         app.listen(process.env.PORT || 8080)
       })

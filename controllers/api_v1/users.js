@@ -1,6 +1,6 @@
 const User = require("../../models/user");
 const { validationResult } = require("express-validator");
-const bcrypt = require("bcryptjs");
+const serializer = require("../../serializer/user_serializer");
 
 exports.createUser = (req, res, next) => {
   const errors = validationResult(req);
@@ -38,14 +38,20 @@ exports.createUser = (req, res, next) => {
         res.status(500).json({ error });
         throw error;
       }
+      res.json({ user });
     })
     .catch(err => {
       console.log(err);
     });
 };
 
-exports.getUser = (req, res, next) => {
-  User.findById(req.params.id)
-    .then(user => serializer(user))
-    .then(user => res.json({ user }));
+exports.getAllUsers = (req, res, next) => {
+  User.findAll()
+    .then(data => data.map(user => serializer(user)))
+    .then(users => res.json({ users }))
+    .catch(err => {
+      const error = new Error("Try again later or contact admin.");
+      error.statusCode = 500;
+      res.status(500).json({ error });
+    });
 };

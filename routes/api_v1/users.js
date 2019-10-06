@@ -3,7 +3,7 @@ const router = express.Router();
 const { body } = require("express-validator");
 const usersController = require("../../controllers/api_v1/users");
 
-// POST /api_1/users
+router.get("/users", usersController.getAllUsers);
 router.post(
   "/users",
   [
@@ -22,7 +22,7 @@ router.post(
       .escape(),
     body("phone")
       .trim()
-      .isLength({min: 11})
+      .isLength({ min: 11 })
       .withMessage("Phone number is too short!"),
     body("password").trim()
   ],
