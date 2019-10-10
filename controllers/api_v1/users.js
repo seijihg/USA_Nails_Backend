@@ -1,5 +1,5 @@
 const User = require("../../models/user");
-const { validationResult } = require("express-validator");
+const { validationResult } = require("../../node_modules/express-validator/src");
 const serializer = require("../../serializer/user_serializer");
 
 exports.createUser = (req, res, next) => {
@@ -17,6 +17,7 @@ exports.createUser = (req, res, next) => {
   const phone = req.body.phone;
   const dob = req.body.dob;
   const password = req.body.password;
+
   User.findOrCreate({
     where: {
       email: email
@@ -48,10 +49,53 @@ exports.createUser = (req, res, next) => {
 exports.getAllUsers = (req, res, next) => {
   User.findAll()
     .then(data => data.map(user => serializer(user)))
-    .then(users => res.json({ users }))
+    .then(users => res.status(200).json({ users }))
     .catch(err => {
       const error = new Error("Try again later or contact admin.");
       error.statusCode = 500;
       res.status(500).json({ error });
     });
+};
+
+exports.getSingleUser = (req, res, next) => {
+  const userId = req.params.id;
+  User.findByPk(userId)
+    .then(user => {
+      serialized_user = serializer(user);
+      res.status(200).json({ user: serialized_user });
+    })
+    .catch(err => {
+      const error = new Error("Try again later or contact admin.");
+      error.statusCode = 500;
+      res.status(500).json({ error });
+    });
+};
+exports.editUser = (req, res, next) => {
+  const userId = req.params.id;
+
+  const title = req.body.title
+  const first_name = req.body.first_name
+  const last_name = req.body.last_name
+  const dob = req.body.dob
+  const phone = req.body.phone
+
+  User.findByPk(userId)
+  .then(user => {
+    user.title = title,
+    user.f_name = first_name,
+    user.l_name = last_name,
+    user.phone = phone
+    user.dob = dob
+    return user.save()
+  })
+  .then(result => {
+    serialized_user = serializer(result)
+    res.status(200).json(serialized_user)
+  })
+  .catch(err => {
+    const error = new Error("Try again later or contact admin.");
+    error.statusCode = 500;
+    res.status(500).json({ error });
+  })
+
 };

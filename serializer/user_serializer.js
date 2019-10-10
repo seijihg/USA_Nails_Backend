@@ -1,5 +1,3 @@
-const unset = require("lodash/unset");
-
 const user_json = user => {
   const userObject = {
     id: user.id,
@@ -15,3 +13,5 @@ const user_json = user => {
 };
 
 module.exports = user_json;
+
+ 

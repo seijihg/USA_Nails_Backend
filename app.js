@@ -1,9 +1,9 @@
-require('dotenv').config()
-const express = require("express")
+require('./node_modules/dotenv/lib/main').config()
+const express = require("./node_modules/express")
 const app = express()
 const path = require('path')
 
-const bodyParser = require('body-parser')
+const bodyParser = require('./node_modules/body-parser')
 app.use(bodyParser.json())
 
 
